@@ -84,7 +84,7 @@ while(offset < input.length){
         throw new Error("Truncated JPEG segment");
     }
 
-    const segmentLength = (input[offset] << 8) + input[offset + 1]; = (input[offset] << 8) | input[offset+1];
+    const segmentLength = (input[offset] << 8) + input[offset + 1] | (input[offset] << 8) | input[offset+1];
 
     if(segmentLength < 2 || offset + segmentLength>input.length){
         throw new Error("Invalid JPEG segment length");
@@ -95,9 +95,9 @@ while(offset < input.length){
 
     const remove = marker === 0xe1 || marker === 0xed || marker === 0xfe;
 
-    if (!remove{
+    if (!remove){
         parts.push(input.subarray(markerStart, segmentEnd));
-    })
+    }
 
     offset = segmentEnd;
 

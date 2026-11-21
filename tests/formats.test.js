@@ -5,6 +5,8 @@ import {
   detectFormat,
   stripMetadata
 } from "../src/lib/formats.js";
+import { verifyCleanOutput } from "../src/metadata/verify.js";
+import { processFile } from "../src/core/pipeline.js";
 
 describe("format detection", () => {
 
@@ -72,5 +74,20 @@ describe("malformed file handling", () => {
         "unsupported"
       )
     ).toThrow();
+  });
+});
+
+describe("verification and pipeline", () => {
+  it("marks output failed when independent inspection finds a container", () => {
+    const original = new Uint8Array([0xff,0xd8,0xff,0xe1,0x00,0x04,0x45,0x78,0xff,0xd9]);
+    const cleaned = new Uint8Array([0xff,0xd8,0xff,0xe1,0x00,0x04,0x45,0x78,0xff,0xd9]);
+    const result = verifyCleanOutput(original, cleaned, "jpeg", { needsReview: false, limitations: [] });
+    expect(result.status).toBe("failed");
+  });
+
+  it("returns unsupported status instead of throwing for unsupported files", async () => {
+    const file = new File([new Uint8Array([1,2,3])], "not-an-image.bin");
+    const result = await processFile(file);
+    expect(result.status).toBe("unsupported");
   });
 });

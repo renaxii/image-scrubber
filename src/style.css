@@ -30,8 +30,6 @@ input {
   margin: 0 auto;
 }
 
-/* Header */
-
 .topbar {
   height: 76px;
 
@@ -434,6 +432,17 @@ footer {
 
 [hidden] {
   display: none !important;
+}
+
+.export-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.report-line {
+  border-top: 1px solid #edf0f3;
+  padding-top: 8px;
 }
 
 /* Responsive */
